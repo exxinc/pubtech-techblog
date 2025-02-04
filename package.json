@@ -1,0 +1,25 @@
+{
+  "name": "zenn_repos",
+  "version": "1.0.0",
+  "main": "scripts/index.js",
+  "scripts": {
+    "start": "bun scripts/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "cloudinary": "^2.5.1",
+    "dotenv": "^16.4.7",
+    "notion-to-md": "^3.1.4"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
