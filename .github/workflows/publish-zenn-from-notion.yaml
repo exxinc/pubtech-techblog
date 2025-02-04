@@ -31,7 +31,7 @@ jobs:
         run: bun run scripts/index.ts
 
       - name: Archive Generated Articles
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: articles
           path: articles
@@ -42,7 +42,7 @@ jobs:
     strategy:
       matrix:
         repo:
-          - { owner: 'yoshiki-0428', name: 'zenn_repos', token: 'GITHUB_REPO_TOKEN_YOSHIKI' }
+          - { owner: 'yoshiki-0428', name: 'zenn_repos', token: 'GH_REPO_TOKEN_YOSHIKI' }
           # 必要な数だけ追加
           # - { owner: 'owner2', name: 'repo2', token: 'TARGET_REPO2_TOKEN' }
     steps:
