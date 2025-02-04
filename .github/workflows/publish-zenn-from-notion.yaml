@@ -68,7 +68,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets[matrix.repo.token] }}
           commit-message: "Update articles from Pubtech Notion"
@@ -76,4 +76,5 @@ jobs:
           title: "Update Articles from Notion"
           body: "Automatically generated PR with updated articles."
           base: main
-          path: "target-repo/articles/**"
+          path: "target-repo/"
+          add-paths: "*.md"
