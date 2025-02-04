@@ -2,7 +2,7 @@ import { NotionToMarkdown } from 'notion-to-md';
 import type {
   BookmarkBlockObjectResponse,
   CodeBlockObjectResponse, EmbedBlockObjectResponse, EquationBlockObjectResponse,
-  ImageBlockObjectResponse,
+  ImageBlockObjectResponse, LinkPreviewBlockObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 import {uploadImage} from "./utils.ts";
 import {Client} from "@notionhq/client";
@@ -40,6 +40,15 @@ n2m.setCustomTransformer('bookmark', (block) => {
 
   return `
 @[card](${bookmark.url})
+`;
+});
+
+n2m.setCustomTransformer('link_preview', (block) => {
+  const { link_preview } = block as LinkPreviewBlockObjectResponse;
+  if (!link_preview.url) return '';
+
+  return `
+@[card](${link_preview.url})
 `;
 });
 
