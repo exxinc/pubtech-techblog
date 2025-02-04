@@ -11,10 +11,30 @@ publication_name: "pubtech"
 # 会社のNotionからZennへの記事公開を自動化する仕組み
 
 
-Zennでは、自身のGitHubリポジトリと記事を連携させてコンテンツを管理できます。詳細な設定方法は公式ガイドに記載されていますが、個々人が会社の記事を管理すると、レビューや品質が不十分になる可能性があります。会社で作成した技術記事は会社の資産と見なされるべきであり、その品質を確保するために、会社でのレビュー体制を設けることが重要だと考えています。
+Zennでは、自身のGitHubリポジトリと記事を連携させてコンテンツを管理できます。詳細な設定方法は公式ガイドに記載されています。
+
+
+
+@[card](https://zenn.dev/zenn/articles/connect-to-github)
+
+
+
+個々人が会社の記事を管理すると、レビューや品質が不十分になる可能性があります。会社で作成した技術記事は会社の資産と見なされるべきであり、その品質を確保するために、会社でのレビュー体制を設けることが重要だと考えています。
 
 
 このような体制を整えるために、NotionからGitHubを通じてZennへ記事を自動で公開する仕組みを構築しました。
+
+
+## これができると嬉しいこと
+
+
+まずは、会社の技術ブログをmarkdownという安定した形式で保存できるということです。Zennではなく、会社で独自の技術ブログを始めようといった場合にも、markdownを保存していると直ぐに対応できます。
+
+
+そして、個人でZennでブログを書いている人にとってはシームレスに自身の記事に追加できるため、簡単に会社技術ブログを寄稿できるのでさらに良いポイントかと思います。
+
+
+更に付け加えると、Notionで技術ブログを書くことができるという点です。私は**Notion信者**なので、技術ブログを書くときにわざわざVSCodeを立ち上げて〜、のようなことができないタイプなのでこのような仕組みがあると書くモチベーションが高まるので非常に助かります。
 
 
 ## 流れ
@@ -46,16 +66,11 @@ Zennでは、自身のGitHubリポジトリと記事を連携させてコンテ�
 	PRを自分で確認し、問題がなければマージします
 
 
-	![https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/xwaanuvokxsfkcpfi4aj?_a=BAMCkGJu0](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/xwaanuvokxsfkcpfi4aj?_a=BAMCkGJu0)
+	![https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/hxlz00exy87gv45oof5o?_a=BAMCkGJu0](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/hxlz00exy87gv45oof5o?_a=BAMCkGJu0)
 
 6. **Zennで記事が公開される**
 
 	Zennとの連携が設定されていると、マージ後にZenn上で記事が公開されます。
-
-
-	
-@[card](https://zenn.dev/zenn/articles/connect-to-github)
-	
 
 
 ```mermaid
@@ -79,7 +94,7 @@ graph LR
 
 ### 行っていること
 
-1. bunでnotionの記事一覧を習得して
+1. bunでnotionの記事一覧を取得して
 2. zenn用のmarkdownに変換をして
 3. 会社のRepositoryに保存
 4. 個人のGitHub RepositoryにPRを作成する
@@ -265,3 +280,28 @@ ${content}
 この記事で提供されているコードや手順を使用したことによって発生したいかなる損害についても、著者および関係者は一切責任を負いません。利用者は、自己責任においてコードを使用するものとし、動作や結果について十分にテストを行ってから本番環境での使用を行ってください。提供された内容はあくまで参考情報であり、予期しない問題やエラーが発生する可能性もありますので、利用に際しては十分なご理解と注意をお願いします。
 :::
 
+
+# まとめ
+
+
+この仕組みは、会社の技術記事をNotionからGitHubを経由してZennへ自動で公開するフローを実現するものです。主な目的は、技術記事の品質を確保し、個人の作業負担を減らしながら、会社の資産としての記事を効率的に管理することです！
+
+
+### 実現したこと
+
+1. **Notionに投稿された記事**が、レビュー後に公開状態に設定されます。
+2. **GitHub Actions**が定期的に実行され、公開されたNotionの記事をMarkdown形式でGitHubに保存します。
+3. それに基づいて、**プルリクエスト（PR）**が自動的に作成され、個人のGitHubリポジトリに記事が反映されます。
+4. PRをマージ後、Zennとの連携設定により、記事が自動でZenn上に公開されます。
+
+### 仕組みの利点
+
+- **markdown形式で保存**: Zenn以外のプラットフォームにも簡単に対応できる。
+- **Notionを活用**: 技術ブログの作成がVSCodeを使わず、Notionで簡単にできる。
+- **レビュー体制**: 会社内でレビューを実施し、品質を確保。
+
+### 技術的な背景
+
+- GitHub Actionsで自動化。
+- `notion-to-md` と `@notionhq/client` を利用して、Notionの記事をMarkdownに変換。
+- PR作成には `create-pull-request` GitHub Actionを使用。
