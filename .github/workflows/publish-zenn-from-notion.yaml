@@ -74,4 +74,3 @@ jobs:
           body: "Automatically generated PR with updated articles."
           base: main
           path: "articles/**"
-        working-directory: target-repo
