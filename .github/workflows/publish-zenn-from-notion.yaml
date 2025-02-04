@@ -53,8 +53,9 @@ jobs:
           # - { owner: 'owner2', name: 'repo2', token: 'TARGET_REPO2_TOKEN' }
     steps:
       - name: Checkout Repository
-        ref: ${{ github.ref }}.
         uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.ref }}
 
       - name: Checkout Target Repository
         uses: actions/checkout@v4.2.2
