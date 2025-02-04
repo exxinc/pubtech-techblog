@@ -23,18 +23,24 @@ jobs:
 
       - name: Run Notion to Markdown Script
         env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          PERSONAL_NOTION_TOKEN: ${{ secrets.PERSONAL_NOTION_TOKEN }}
+          PERSONAL_NOTION_DATABASE_ID: ${{ secrets.PERSONAL_NOTION_DATABASE_ID }}
           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
         run: bun run scripts/index.ts
 
-      - name: Archive Generated Articles
-        uses: actions/upload-artifact@v4.6.0
-        with:
-          name: articles
-          path: articles
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "zenn-bot@github.com"
+          git config --local user.name "zenn-bot"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "Update articles from Notion"
+            git push
+          else
+            echo "No changes to commit."
+          fi
 
   create-prs:
     needs: generate-articles
@@ -46,18 +52,15 @@ jobs:
           # 必要な数だけ追加
           # - { owner: 'owner2', name: 'repo2', token: 'TARGET_REPO2_TOKEN' }
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
       - name: Checkout Target Repository
         uses: actions/checkout@v4.2.2
         with:
           repository: ${{ matrix.repo.owner }}/${{ matrix.repo.name }}
           token: ${{ secrets[matrix.repo.token] }}
           path: target-repo
-
-      - name: Download Generated Articles
-        uses: actions/download-artifact@v4
-        with:
-          name: articles
-          path: articles
 
       - name: Copy Articles into Target Repo
         run: |
@@ -68,7 +71,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets[matrix.repo.token] }}
-          commit-message: "Update articles from Notion"
+          commit-message: "Update articles from Pubtech Notion"
           branch: notion-update-${{ github.run_number }}
           title: "Update Articles from Notion"
           body: "Automatically generated PR with updated articles."
