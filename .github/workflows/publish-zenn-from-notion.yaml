@@ -1,0 +1,77 @@
+name: Publish Notion Articles to Multiple Repos
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}  # 手動実行も可能
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  generate-articles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Run Notion to Markdown Script
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        run: bun run scripts/index.ts
+
+      - name: Archive Generated Articles
+        uses: actions/upload-artifact@v3
+        with:
+          name: articles
+          path: articles
+
+  create-prs:
+    needs: generate-articles
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo:
+          - { owner: 'yoshiki-0428', name: 'zenn_repos', token: 'GITHUB_REPO_TOKEN_YOSHIKI' }
+          # 必要な数だけ追加
+          # - { owner: 'owner2', name: 'repo2', token: 'TARGET_REPO2_TOKEN' }
+    steps:
+      - name: Checkout Target Repository
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ matrix.repo.owner }}/${{ matrix.repo.name }}
+          token: ${{ secrets[matrix.repo.token] }}
+          path: target-repo
+
+      - name: Download Generated Articles
+        uses: actions/download-artifact@v4
+        with:
+          name: articles
+          path: articles
+
+      - name: Copy Articles into Target Repo
+        run: |
+          cp -r articles/${{ matrix.repo.owner }}/* target-repo/articles/
+        working-directory: ${{ github.workspace }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets[matrix.repo.token] }}
+          commit-message: "Update articles from Notion"
+          branch: notion-update-${{ github.run_number }}
+          title: "Update Articles from Notion"
+          body: "Automatically generated PR with updated articles."
+          base: main
+          path: "articles/**"
+        working-directory: target-repo
