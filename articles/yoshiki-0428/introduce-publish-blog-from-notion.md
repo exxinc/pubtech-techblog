@@ -2,10 +2,22 @@
 title: 会社のNotionから個人GitHubリポジトリへ自動的に記事を反映させるワークフローを紹介する
 emoji: 💽
 type: tech
-topics: [GHA, github, notion]
+topics: [github, notion, githubaction, GHA]
 published: true
 publication_name: "pubtech"
 ---
+
+
+はじめまして！パブリックテクノロジーズでリードエンジニアをしている[yoshiki-0428](https://x.com/yoshiki__0428)です。
+
+
+普段はX (Twitter)で活動等しています。
+
+
+今回は会社の技術ブログをどう品質を担保しながら個人のRepositoryにも保存ができるような仕組みを構築しました。
+
+
+駄文ではありますが、最後まで付き合っていただけると嬉しく思います。
 
 
 # 会社のNotionからZennへの記事公開を自動化する仕組み
@@ -39,6 +51,16 @@ Zennでは、自身のGitHubリポジトリと記事を連携させてコンテ�
 
 ## 流れ
 
+
+```mermaid
+graph LR
+    N[会社Notion] --> R[会社Repo]
+    R --> G[GitHub Actions]
+    G --> PR[PR作成]
+    PR --> M[自身のRepo]
+
+```
+
 1. **会社のNotionに記事を投稿する**
 
 	まず、会社のNotionスペースに記事を投稿します。
@@ -66,21 +88,11 @@ Zennでは、自身のGitHubリポジトリと記事を連携させてコンテ�
 	PRを自分で確認し、問題がなければマージします
 
 
-	![https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/yngigpxiofqbjswrudrj?_a=BAMCkGJu0](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/yngigpxiofqbjswrudrj?_a=BAMCkGJu0)
+	![https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/qlyg7lug0eynr4xhhghz?_a=BAMCkGJu0](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/qlyg7lug0eynr4xhhghz?_a=BAMCkGJu0)
 
 6. **Zennで記事が公開される**
 
 	Zennとの連携が設定されていると、マージ後にZenn上で記事が公開されます。
-
-
-```mermaid
-graph LR
-    N[会社Notion] --> R[会社Repo]
-    R --> G[GitHub Actions]
-    G --> PR[PR作成]
-    PR --> M[自身のRepo]
-
-```
 
 
 ### 作成したGHA
@@ -94,10 +106,12 @@ graph LR
 
 ### 行っていること
 
-1. bunでnotionの記事一覧を取得して
-2. zenn用のmarkdownに変換をして
-3. 会社のRepositoryに保存
-4. 個人のGitHub RepositoryにPRを作成する
+1. bunでscripts/index.tsを実行する
+	1. notionの記事一覧を取得
+	2. zenn用のmarkdownに変換
+	3. ファイルとして`articles`配下に保存
+2. 会社のGitHub Repositoryに保存
+3. 個人のGitHub RepositoryにPRを作成
 
 という感じです。
 
