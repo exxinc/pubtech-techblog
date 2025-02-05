@@ -66,7 +66,7 @@ Zennでは、自身のGitHubリポジトリと記事を連携させてコンテ�
 	PRを自分で確認し、問題がなければマージします
 
 
-	![https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/hxlz00exy87gv45oof5o?_a=BAMCkGJu0](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/hxlz00exy87gv45oof5o?_a=BAMCkGJu0)
+	![https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/yngigpxiofqbjswrudrj?_a=BAMCkGJu0](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/yngigpxiofqbjswrudrj?_a=BAMCkGJu0)
 
 6. **Zennで記事が公開される**
 
