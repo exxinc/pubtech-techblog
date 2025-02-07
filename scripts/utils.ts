@@ -19,7 +19,43 @@ export function cleanSlug(raw: string): string {
   return slug;
 }
 
-export async function uploadImage(filePath: string): Promise<string> {
+/**
+ * 画像のマークダウン記法から画像 URL を取り出し、
+ * 順番に slug + "-" + index という publicId を付与して画像アップロードを行い、
+ * アップロード後の URL に置き換える非同期関数。
+ *
+ * @param content 変換前の Markdown 文字列
+ * @param slug ファイル名用の slug（画像名のベースとなる）
+ * @returns 画像のアップロード後の新しい URL に置換済みの Markdown 文字列
+ */
+export async function replaceImages(content: string, slug: string): Promise<string> {
+  // 正規表現: ![notion-image:キャプション](画像URL)
+  const imageRegex = /!\[notion-image:(.*?)\]\((.*?)\)/g;
+  let imageIndex = 1;
+  let newContent = content;
+
+  // matchAll を使って全ての画像マッチを取得
+  const matches = Array.from(content.matchAll(imageRegex));
+  for (const match of matches) {
+    const fullMatch = match[0];  // 例: ![notion-image:キャプション](画像URL)
+    // ※ キャプション部分は利用する場合に合わせて取得可能です
+    // const caption = match[1];
+    const imageUrl = match[2];
+
+    // 画像ごとに連番を付与した publicId を生成
+    const publicId = `${slug}-${imageIndex++}`;
+
+    // 画像アップロード関数（アップロード先から新しい URL が返るものとする）
+    const newImageUrl = await uploadImage(imageUrl, publicId);
+
+    // 画像マークダウンを、新しい publicId と newImageUrl を使ったものに置換
+    const newImageMarkdown = `![${publicId}](${newImageUrl})`;
+    newContent = newContent.replace(fullMatch, newImageMarkdown);
+  }
+  return newContent;
+}
+
+export async function uploadImage(filePath: string, publicId?: string): Promise<string> {
   // Configuration
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -29,14 +65,13 @@ export async function uploadImage(filePath: string): Promise<string> {
 
   // Upload an image
   const uploadResult = await cloudinary.uploader
-  .upload(filePath)
+  .upload(filePath, { public_id: publicId })
   .catch((error) => {
     console.log(error);
   });
 
-  console.log(uploadResult);
   if (!uploadResult) {
-    return '';
+    throw new Error('Failed to upload image');
   }
 
   // Optimize delivery by resizing and applying auto-format and auto-quality
@@ -45,6 +80,6 @@ export async function uploadImage(filePath: string): Promise<string> {
     quality: 'auto'
   });
 
-  console.log(optimizeUrl);
+  console.log("optimizeUrl: ", optimizeUrl);
   return optimizeUrl;
 }

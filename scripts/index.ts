@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import {Client} from "@notionhq/client";
 import {n2m} from "./transformer.ts";
-import {cleanSlug} from "./utils.ts";
+import {cleanSlug, replaceImages} from "./utils.ts";
 
 const notionToken = process.env.PERSONAL_NOTION_TOKEN;
 if (!notionToken) {
@@ -97,7 +97,7 @@ publication_name: "pubtech"
         continue;
       }
       // zenn用のmarkdownに変換
-      const content = frontMatter + mdString.parent
+      let content = frontMatter + mdString.parent
         // callout 💡の場合、メッセージ
         .replace(/> 💡 (.+)/g, (match, p1) => {
           return `:::message\n${p1}\n:::`; })
@@ -110,9 +110,7 @@ publication_name: "pubtech"
 ${content}
 :::`;
       });
-
-      // ※ mdString.parent を使用しているのは、notion-to-md の出力構造に合わせています。
-      // const content = frontMatter + mdString.parent;
+      content = await replaceImages(content, slug);
 
       // User Name ごとのディレクトリ作成
       const userDir = path.join('articles', userName);

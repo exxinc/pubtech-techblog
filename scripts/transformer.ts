@@ -4,7 +4,6 @@ import type {
   CodeBlockObjectResponse, EmbedBlockObjectResponse, EquationBlockObjectResponse,
   ImageBlockObjectResponse, LinkPreviewBlockObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints";
-import {uploadImage} from "./utils.ts";
 import {Client} from "@notionhq/client";
 
 // Notion API のクライアントを初期化
@@ -53,7 +52,7 @@ n2m.setCustomTransformer('link_preview', (block) => {
 });
 
 n2m.setCustomTransformer('image', async (block) => {
-  const { image } = block as ImageBlockObjectResponse;
+  const { image, parent } = block as ImageBlockObjectResponse;
   // type externalならupload処理をしない
   if (image.type === 'external') {
     return `![${image.caption[0]?.plain_text || image.external.url}](${image.external.url})`;
@@ -61,11 +60,7 @@ n2m.setCustomTransformer('image', async (block) => {
 
   const imageUrl = image.file.url
 
-  // 外部サーバに画像をアップロード
-  const cloudinaryImageUrl = await uploadImage(imageUrl);
-
-  // Markdown 内で参照する画像の URL を外部サーバのものに置き換え
-  return `![${image.caption[0]?.plain_text || cloudinaryImageUrl}](${cloudinaryImageUrl})`;
+  return `![notion-image:${image.caption[0]?.plain_text || imageUrl}](${imageUrl})`;
 });
 
 // code
