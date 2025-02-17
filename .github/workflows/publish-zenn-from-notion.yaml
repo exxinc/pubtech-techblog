@@ -5,6 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch: {}  # 手動実行も可能
+  repository_dispatch:
+    types:
+      - webhook
   schedule:
     - cron: '0 0 * * *'
 
