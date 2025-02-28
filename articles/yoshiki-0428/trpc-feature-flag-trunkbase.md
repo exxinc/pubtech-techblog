@@ -1,6 +1,6 @@
 ---
 title: tRPC x Feature Flag で実現するスムーズなトランクベース開発
-emoji: 📝
+emoji: ⛳
 type: tech
 topics: [FeatureFlag, tRPC, Node]
 published: true
