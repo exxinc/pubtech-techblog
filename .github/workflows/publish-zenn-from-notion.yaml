@@ -53,6 +53,7 @@ jobs:
         repo:
           - { owner: 'yoshiki-0428', name: 'zenn_repos', token: 'GH_REPO_TOKEN_YOSHIKI' }
           # 必要な数だけ追加
+          - { owner: '05ryt31', name: 'zenn_repos', token: 'GH_REPO_TOKEN_RYUTO' }
           # - { owner: 'owner2', name: 'repo2', token: 'TARGET_REPO2_TOKEN' }
     steps:
       - name: Checkout Repository
