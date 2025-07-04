@@ -273,7 +273,7 @@ export const featureFlagProcedure = (flagKey: string) => {
 あとは、フラグをcloudbeesの管理画面で作成してテナントやユーザIDで条件を作成して確認をしてみましょう。
 
 
-![trpc-feature-flag-trunkbase-1](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/trpc-feature-flag-trunkbase-1?_a=BAMCkGJu0)
+![trpc-feature-flag-trunkbase-1](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/trpc-feature-flag-trunkbase-1?_a=BAMCkGFE0)
 
 
 ### **5. ルーターでの使用例**

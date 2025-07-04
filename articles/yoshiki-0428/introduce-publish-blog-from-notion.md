@@ -88,7 +88,7 @@ graph LR
 	PRを自分で確認し、問題がなければマージします
 
 
-	![introduce-publish-blog-from-notion-1](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/introduce-publish-blog-from-notion-1?_a=BAMCkGJu0)
+	![introduce-publish-blog-from-notion-1](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/introduce-publish-blog-from-notion-1?_a=BAMCkGFE0)
 
 6. **Zennで記事が公開される**
 

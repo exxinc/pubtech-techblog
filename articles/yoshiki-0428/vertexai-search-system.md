@@ -20,7 +20,7 @@ publication_name: "pubtech"
 Vertex AI Searchは、Googleの検索技術を活用した強力なエンタープライズ検索サービスですが、実際の業務システムに組み込む際にはいくつかの課題があります。特に今回は以下のポイントに焦点を当てていきます：
 
 
-![vertexai-search-system-1](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/vertexai-search-system-1?_a=BAMCkGJu0)
+![vertexai-search-system-1](https://res.cloudinary.com/dlg4qjsyv/image/upload/f_auto,q_auto/vertexai-search-system-1?_a=BAMCkGFE0)
 
 1. マルチテナント環境での効率的なエンジン管理
 2. 構造化データを活用した検索精度の向上
