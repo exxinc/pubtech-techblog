@@ -1,0 +1,56 @@
+name: zizmor GitHub Actions Security Scan
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  zizmor:
+    name: zizmor Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Detect relevant changes
+        id: filter
+        uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+        with:
+          filters: |
+            relevant:
+              - '.github/workflows/**'
+              - '.github/actions/**'
+              - '.github/zizmor.yml'
+              - '.github/zizmor.yaml'
+
+      - name: Ensure action scan path exists
+        if: steps.filter.outputs.relevant == 'true'
+        run: mkdir -p .github/actions
+
+      - name: Run zizmor
+        if: steps.filter.outputs.relevant == 'true'
+        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7
+        with:
+          inputs: .github/workflows/ .github/actions/
+          online-audits: false
+          persona: regular
+          version: v1.26.1
+          advanced-security: false
+          annotations: true
+
+      - name: No relevant changes
+        if: steps.filter.outputs.relevant != 'true'
+        run: echo "No workflow, action, or zizmor config changes. Skipping zizmor scan."
